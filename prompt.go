@@ -12,7 +12,7 @@ import (
 )
 
 // Writer is the default writer for the package.
-var Writer io.Writer
+var Writer io.Writer = os.Stdout
 
 // String prompt.
 func String(prompt string, args ...interface{}) string {
