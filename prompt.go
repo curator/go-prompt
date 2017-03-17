@@ -33,7 +33,7 @@ func MustString(prompt string, args ...interface{}) (s string) {
 
 // Float64 reads a string from the input and parses it as a float64.
 func Float64(prompt string, args ...interface{}) (float64, error) {
-	s := String(prompt, args)
+	s := String(prompt, args...)
 
 	f, err := strconv.ParseFloat(s, 64)
 	if err != nil {
@@ -47,7 +47,7 @@ func Float64(prompt string, args ...interface{}) (float64, error) {
 // is valid.
 func MustFloat64(prompt string, args ...interface{}) float64 {
 	for {
-		f, err := Float64(prompt, args)
+		f, err := Float64(prompt, args...)
 		if err != nil {
 			fmt.Fprintln(Writer, err.Error())
 			continue
