@@ -22,13 +22,39 @@ func String(prompt string, args ...interface{}) string {
 	return string(bytes)
 }
 
-// StringRequired reads a string from the input until a non empty one is
+// MustString reads a string from the input until a non empty one is
 // provided.
-func StringRequired(prompt string, args ...interface{}) (s string) {
+func MustString(prompt string, args ...interface{}) (s string) {
 	for strings.Trim(s, " ") == "" {
 		s = String(prompt, args...)
 	}
 	return s
+}
+
+// Float64 reads a string from the input and parses it as a float64.
+func Float64(prompt string, args ...interface{}) (float64, error) {
+	s := String(prompt, args)
+
+	f, err := strconv.ParseFloat(s, 64)
+	if err != nil {
+		return 0.0, err
+	}
+
+	return f, nil
+}
+
+// MustFloat64 reads a string from the input and parses it as a float64 until it
+// is valid.
+func MustFloat64(prompt string, args ...interface{}) float64 {
+	for {
+		f, err := Float64(prompt, args)
+		if err != nil {
+			fmt.Fprintln(Writer, err.Error())
+			continue
+		}
+
+		return f
+	}
 }
 
 // Confirm continues prompting until the input is boolean-ish.
