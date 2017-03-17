@@ -1,19 +1,29 @@
 package prompt
 
-import "github.com/howeyc/gopass"
-import "strings"
-import "strconv"
-import "fmt"
+import (
+	"bufio"
+	"fmt"
+	"io"
+	"os"
+	"strconv"
+	"strings"
+
+	"github.com/howeyc/gopass"
+)
+
+// Writer is the default writer for the package.
+var Writer io.Writer
 
 // String prompt.
 func String(prompt string, args ...interface{}) string {
-	var s string
-	fmt.Printf(prompt+": ", args...)
-	fmt.Scanln(&s)
-	return s
+	fmt.Fprintf(Writer, prompt+": ", args...)
+	reader := bufio.NewReader(os.Stdin)
+	bytes, _, _ := reader.ReadLine()
+	return string(bytes)
 }
 
-// String prompt (required).
+// StringRequired reads a string from the input until a non empty one is
+// provided.
 func StringRequired(prompt string, args ...interface{}) (s string) {
 	for strings.Trim(s, " ") == "" {
 		s = String(prompt, args...)
@@ -35,12 +45,12 @@ func Confirm(prompt string, args ...interface{}) bool {
 
 // Choose prompts for a single selection from `list`, returning in the index.
 func Choose(prompt string, list []string) int {
-	fmt.Println()
+	fmt.Fprintln(Writer)
 	for i, val := range list {
-		fmt.Printf("  %d) %s\n", i+1, val)
+		fmt.Fprintf(Writer, "  %d) %s\n", i+1, val)
 	}
 
-	fmt.Println()
+	fmt.Fprintln(Writer)
 	i := -1
 
 	for {
@@ -69,16 +79,16 @@ func Choose(prompt string, list []string) int {
 
 // Password prompt.
 func Password(prompt string, args ...interface{}) string {
-	fmt.Printf(prompt+": ", args...)
-	password, _ := gopass.GetPasswd()
+	fmt.Fprintf(Writer, prompt+": ", args...)
+	password, _ := gopass.GetPasswdPrompt("", false, os.Stdin, Writer)
 	s := string(password[0:])
 	return s
 }
 
-// Password prompt with mask.
+// PasswordMasked is a password prompt with mask.
 func PasswordMasked(prompt string, args ...interface{}) string {
-	fmt.Printf(prompt+": ", args...)
-	password, _ := gopass.GetPasswdMasked()
+	fmt.Fprintf(Writer, prompt+": ", args...)
+	password, _ := gopass.GetPasswdPrompt("", true, os.Stdin, Writer)
 	s := string(password[0:])
 	return s
 }

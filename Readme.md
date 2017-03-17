@@ -1,16 +1,18 @@
 
 # go-prompt
 
- Terminal prompts for Go.
+ Terminal prompts for Go. A fork of the go-prompt package by segmentio.
 
- View the [docs](http://godoc.org/pkg/github.com/segmentio/go-prompt).
+ https://github.com/segmentio/go-prompt
+
+ View the [docs](http://godoc.org/pkg/github.com/wyattjoh/go-prompt).
 
 ## Example
 
 ```go
 package main
 
-import "github.com/segmentio/go-prompt"
+import "github.com/wyattjoh/go-prompt"
 
 var langs = []string{
   "c",
